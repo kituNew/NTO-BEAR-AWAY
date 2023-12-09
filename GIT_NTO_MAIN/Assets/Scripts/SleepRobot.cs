@@ -26,9 +26,13 @@ public class SleepRobot : MonoBehaviour
 
     Animator animator;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip soundWakeUp;
+
     void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -106,6 +110,7 @@ public class SleepRobot : MonoBehaviour
         if(!deactive)
         {
             animator.Play("SleepRoborWakeUp");
+            audioSource.PlayOneShot(soundWakeUp);
 
             if (isDoTAnim)
             {   
@@ -137,7 +142,6 @@ public class SleepRobot : MonoBehaviour
     {
         player.GetComponent<Player_Controller>().HelpToExplosionSleepRobor(1f);
         gameObject.GetComponentInChildren<Colider_Detector>().isExplosion = true;
-        //Do1do(xInt);
     }
 
     bool If1do(int x)

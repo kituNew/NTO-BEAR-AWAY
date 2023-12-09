@@ -24,9 +24,21 @@ public class Player_Controller : MonoBehaviour
 
     bool isDie = false;
 
+    AudioSource audioSource;
+    [SerializeField] AudioClip soundRun;
+    [SerializeField] AudioClip soundDie;
+    [SerializeField] AudioClip soundJump;
+    [SerializeField] AudioClip soundBam;
+
+    [SerializeField] AudioClip soundBamMain;
+
+    float timerSound = 0.3f;
+    bool isSound = false;
+
     void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         rb2d = GetComponent<Rigidbody2D>();
         body = GetComponent<CapsuleCollider2D>();
         legs = GetComponent<BoxCollider2D>();
@@ -53,6 +65,22 @@ public class Player_Controller : MonoBehaviour
             if(moveH != 0f && Time.timeScale > 0f)
             {
                 animator.Play("PlayerRun");
+                if (isSound)
+                {
+                    audioSource.PlayOneShot(soundRun);
+                    
+                    timerSound = 0.3f;
+                    isSound = false;
+                }
+                else
+                {
+                    timerSound -= Time.deltaTime;
+                }
+
+                if (timerSound <= 0f)
+                {
+                    isSound = true;
+                }
             }
             else
             {
@@ -75,6 +103,7 @@ public class Player_Controller : MonoBehaviour
         {
             isAnimate = true;
             animator.Play("PlayerJump");
+            audioSource.PlayOneShot(soundJump);
             StartCoroutine(FalsingAnimate());
             rb2d.velocity += new Vector2(0f, jumpForce);
         }
@@ -135,6 +164,13 @@ public class Player_Controller : MonoBehaviour
 
     public void Bam()
     {
+        StartCoroutine(BamBam());
+    }
+
+    IEnumerator BamBam()
+    {
+        audioSource.PlayOneShot(soundBam);
+        yield return new WaitForSeconds(0.2f);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -150,6 +186,7 @@ public class Player_Controller : MonoBehaviour
         isDie = true;
         isAnimate = true;
         animator.Play("PlayerDie");
+        audioSource.PlayOneShot(soundDie);
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -166,5 +203,4 @@ public class Player_Controller : MonoBehaviour
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
-
 }

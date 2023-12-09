@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 public class Enemy_controller : MonoBehaviour
 {
     [SerializeField] float speed = 5f;
@@ -34,10 +33,12 @@ public class Enemy_controller : MonoBehaviour
     public bool isOff = false;
 
     Animator animator;
+    AudioSource audioSource;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
         rb2d = GetComponent<Rigidbody2D>();
         look = Instantiate(LookPrefab, rb2d.position + new Vector2(dir, 0f), Quaternion.identity);
         look.GetComponent<PieceOfLook>().Launch(dir, 10f);
@@ -180,6 +181,7 @@ public class Enemy_controller : MonoBehaviour
 
     public void Do2do()
     {
+        Destroy(audioSource);
         animator.Play("RobotStop");
         isOff = true;
         Destroy(lastLine);

@@ -76,6 +76,8 @@ public class Colider_Detector : MonoBehaviour
         if(isExplosion)
         {
             Instantiate(particlePrefab, transform.position, Quaternion.identity);
+            GameObject.Find("ExplosionSound").GetComponent<ExplosionSound>().ExplosionSoundIt();
+
             yield return new WaitForSeconds(0.05f);
 
             if(gameObject.transform.parent.gameObject.GetComponent<Enemy_controller>() != null)
